@@ -1,0 +1,30 @@
+{
+  "name": "stalk-market",
+  "version": "1.0.0",
+  "description": "Provides tools to analyze past and present turnip prices from Animal Crossing New Horizons.",
+  "main": "./src/js/index.js",
+  "dependencies": {
+    "@types/node": "^13.11.1",
+    "bindings": "~1.2.1",
+    "nan": "^2.0.0"
+  },
+  "scripts": {
+    "build": "tsc --build --clean && tsc --build && node-gyp rebuild",
+    "package": "gulp pack && npm pack ./dist/"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "typescript": "^3.8.3"
+  },
+  "gypfile": true,
+  "repository": {
+    "url": "https://github.com/rolledback/StalkMarket"
+  },
+  "license": "MIT",
+  "keywords": [
+    "stalk market",
+    "animal crossing",
+    "turnips",
+    "turnip prices"
+  ]
+}
