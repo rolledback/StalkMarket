@@ -10,13 +10,15 @@
   "scripts": {
     "build": "tsc --build --clean && tsc --build && node-gyp rebuild",
     "package": "gulp pack && npm pack ./dist/",
-    "test": "mocha ./out/test/test.js"
+    "test": "mocha ./out/test/test.js",
+    "test-cicd": "mocha ./out/test/test.js --reporter mocha-junit-reporter"
   },
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.11.1",
     "gulp": "^4.0.2",
     "mocha": "^7.1.1",
+    "mocha-junit-reporter": "^1.23.3",
     "typescript": "^3.8.3"
   },
   "gypfile": true,

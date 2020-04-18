@@ -5,3 +5,4 @@ out/
 *.tgz
 *.exe
 *.obj
+test-results.xml
