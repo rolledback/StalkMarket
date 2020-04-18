@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <cmath>
 #include "PriceMatcher.h"
 
 using namespace std;
