@@ -20,9 +20,15 @@ function copyScript() {
         .pipe(gulp.dest("dist/src/js/"));
 }
 
+function copyReadme() {
+    return gulp.src("README.MD")
+        .pipe(gulp.dest("dist/"));
+}
+
 exports.pack = gulp.parallel(
     copyGyp,
     copyPkgJson,
+    copyReadme,
     copyCpp,
     copyScript
 );
