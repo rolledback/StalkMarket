@@ -1,5 +1,3 @@
-// #include <iostream>
-// #include <algorithm>
 #include <vector>
 #include <nan.h>
 #include "PriceMatcher.h"
@@ -17,7 +15,7 @@ void addMatchesToRetObj(Local<Array>& retArr, int retArrIdx, char* patternName, 
     Local<String> matchesProp = Nan::New("matches").ToLocalChecked();
     Local<Array> matchesValue = Nan::New<Array>(matches.size());
 
-    for (int matchIdx = 0; matchIdx < matches.size(); matchIdx++)
+    for (size_t matchIdx = 0; matchIdx < matches.size(); matchIdx++)
     {
         Local<Array> match = Nan::New<Array>(14);
         for (int dayIdx = 0; dayIdx < 14; dayIdx++)
@@ -41,7 +39,7 @@ void invoke(const Nan::FunctionCallbackInfo<Value>& info)
     Local<Array> knownPricesJs = Local<Array>::Cast(info[0]);
 
     int knownPrices[14] = { };
-    for (int i = 0; i < knownPricesJs->Length(); i++) {
+    for (uint32_t i = 0; i < knownPricesJs->Length(); i++) {
         knownPrices[i] = Nan::To<int>(knownPricesJs->Get(i)).FromJust();
     }
 

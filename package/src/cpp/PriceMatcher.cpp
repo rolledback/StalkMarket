@@ -76,7 +76,6 @@ namespace PriceMatcher
             isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], 1.4, 2.0, pricesToMatch[work]);
             work++;
 
-            int workTemp = work;
             if (work < 14)
             {
                 float rateMin2 = 0.4;
@@ -324,7 +323,7 @@ namespace PriceMatcher
 
 void printMatches(vector<vector<vector<int>>> matches)
 {
-    for (int i = 0; i < matches.size(); i++)
+    for (size_t i = 0; i < matches.size(); i++)
     {
         vector<vector<int>> maxAndMins = matches[i];
         cout << "[";
