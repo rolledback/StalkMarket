@@ -2,6 +2,8 @@
 
 Provides tools to analyze past and present turnip prices from Animal Crossing New Horizons.
 
+[![Build Status](https://mrayermann.visualstudio.com/StalkMarket/_apis/build/status/rolledback.StalkMarket?branchName=master)](https://mrayermann.visualstudio.com/StalkMarket/_build/latest?definitionId=2&branchName=master)
+
 ## Developing
 
 ```
