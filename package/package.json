@@ -9,11 +9,14 @@
   },
   "scripts": {
     "build": "tsc --build --clean && tsc --build && node-gyp rebuild",
-    "package": "gulp pack && npm pack ./dist/"
+    "package": "gulp pack && npm pack ./dist/",
+    "test": "mocha ./out/test/test.js"
   },
   "devDependencies": {
+    "@types/mocha": "^7.0.2",
     "@types/node": "^13.11.1",
     "gulp": "^4.0.2",
+    "mocha": "^7.1.1",
     "typescript": "^3.8.3"
   },
   "gypfile": true,

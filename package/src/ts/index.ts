@@ -1,6 +1,21 @@
-const PriceMatcher = require("../../build/Release/PriceMatcher.node");
+import * as process from "process";
+
+let nativeNodePath = "../../build/Release/PriceMatcher.node";
+if (process.env["NODE_TEST"] === "true") {
+    nativeNodePath = "../../../build/Release/PriceMatcher.node";
+}
 
 export type PatternAndMatches = { patternName: string, matches: number[][][] };
+const PriceMatcher: { findMatches: (knownPrices: number[]) => PatternAndMatches[] } = require(nativeNodePath);
+
+export function analyzePrices(knownPrices: number[]): PatternAndMatches[] {
+    let matchesByPattern: PatternAndMatches[] = PriceMatcher.findMatches(knownPrices);
+    let totalMatches = matchesByPattern.reduce<number>((acc, pattern) => acc + pattern.matches.length, 0);
+    let analysisResult = totalMatches > 0 ? realAnalysis(matchesByPattern) : emptyAnalysis();
+    matchesByPattern.push(analysisResult);
+
+    return matchesByPattern;
+}
 
 function realAnalysis(matchesByPattern: PatternAndMatches[]): PatternAndMatches {
     let analyzedMinsAndMaxes: number[][] = [];
@@ -27,13 +42,4 @@ function emptyAnalysis(): PatternAndMatches {
         patternName: "Across All",
         matches: []
     };
-}
-
-export function analyzePrices(knownPrices: number[]): PatternAndMatches[] {
-    let matchesByPattern: PatternAndMatches[] = PriceMatcher.findMatches(knownPrices);
-    let totalMatches = matchesByPattern.reduce<number>((acc, pattern) => acc + pattern.matches.length, 0);
-    let analysisResult = totalMatches > 0 ? realAnalysis(matchesByPattern) : emptyAnalysis();
-    matchesByPattern.push(analysisResult);
-
-    return matchesByPattern;
 }
