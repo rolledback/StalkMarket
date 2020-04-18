@@ -7,6 +7,7 @@ Provides tools to analyze past and present turnip prices from Animal Crossing Ne
 ```
 npm i
 npm run build
+npm test
 ```
 
 ## Using
