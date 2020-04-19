@@ -99,9 +99,9 @@ export function getPatternProbabilities(previousPattern: number | undefined, imp
 
     let probabilities: number[];
     if (!!previousPattern) {
-        probabilities = probabilityTable[previousPattern];
+        probabilities = probabilityTable[previousPattern].slice(0);
     } else {
-        probabilities = probabilityTable[4];
+        probabilities = probabilityTable[4].slice(0);
     }
 
     let possiblePatternCount = impossiblePatterns.filter((impossible) => !impossible).length;

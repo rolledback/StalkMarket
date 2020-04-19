@@ -52,4 +52,15 @@ describe("analyzePrices", function () {
 
         assert(!!result);
     });
+    it("should return consistent results", function () {
+        let knownPrices1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let knownPrices2 = [93, 93, 83, 78, 107, 146, 423, 0, 0, 0, 0, 0, 0, 0];
+
+        let result1 = StalkMarket.analyzePrices(knownPrices1);
+        StalkMarket.analyzePrices(knownPrices2);
+        let result2 = StalkMarket.analyzePrices(knownPrices1);
+
+        let resultsAreTheSame: boolean = JSON.stringify(result1) === JSON.stringify(result2);
+        assert(resultsAreTheSame);
+    });
 });
