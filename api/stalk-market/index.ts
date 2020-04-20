@@ -34,9 +34,11 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     };
 
     let end = Date.now();
-    log.push(`Execution time: ${end - start}ms`);
 
-    context.log(response);
+    log.push(`Execution time: ${end - start}ms`);
+    log.push(`Response: ${JSON.stringify(response)}`);
+
+    context.log(log);
     context.done();
 };
 
