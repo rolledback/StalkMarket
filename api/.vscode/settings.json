@@ -1,0 +1,9 @@
+{
+  "azureFunctions.deploySubpath": ".",
+  "azureFunctions.projectLanguage": "TypeScript",
+  "azureFunctions.projectRuntime": "~3",
+  "debug.internalConsoleOptions": "neverOpen",
+  "azureFunctions.preDeployTask": "npm prune",
+  "editor.formatOnSave": true,
+  "azureFunctions.postDeployTask": "npm install --arch=ia32"
+}

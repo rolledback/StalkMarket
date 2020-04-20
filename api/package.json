@@ -1,0 +1,21 @@
+{
+  "name": "stalk-market-api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "init": "npm install --arch=ia32",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@types/request": "^2.48.4",
+    "stalk-market": "^2.1.0"
+  },
+  "devDependencies": {
+    "@azure/functions": "^1.0.2-beta2",
+    "typescript": "^3.3.3"
+  }
+}
