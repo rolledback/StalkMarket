@@ -19,6 +19,9 @@ function STALKMARKET_MATCH(priceM: number[][], fB: boolean, probabilityM?: numbe
     let unknownBuyPrice = !priceV[0];
 
     for (let i = 1; i < 14; i++) {
+        if (typeof priceV[i] !== "number") {
+            priceV[i] = 0;
+        }
         knownPrices[i] = priceV[i - 1] || 0;
     }
 
