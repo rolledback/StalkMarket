@@ -1,0 +1,21 @@
+{
+  "name": "stalk-market-sheets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./index.js",
+  "dependencies": {},
+  "scripts": {
+    "build": "tsc --build --clean && tsc --build && node replace.js"
+  },
+  "devDependencies": {
+    "@types/google-apps-script": "^1.0.12",
+    "@types/node": "^13.13.2",
+    "stalk-market": "^2.1.0",
+    "typescript": "^3.8.3"
+  },
+  "repository": {
+    "url": "https://github.com/rolledback/StalkMarket"
+  },
+  "license": "MIT",
+  "keywords": []
+}
