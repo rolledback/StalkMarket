@@ -10,27 +10,25 @@ const STALK_MARKET_API = "#STALK_MARKET_API#";
  * @param probabilityM A 1 row, 4 column matrix of numbers. Each element is a 0..1 probability
  * that pattern i (i being the column) was the pattern last week.
  */
-function STALKMARKET_MATCH(priceM: number[][], fB: boolean, probabilityM?: number[][]) {
-    let priceV: number[] = priceM[0];
-    let probabilityV: number[] = (probabilityM || [[]])[0];
-
-    let knownPrices = Array(14).fill(priceV[0] || 0);
-    let firstBuy = fB === true;
-    let unknownBuyPrice = !priceV[0];
-
+function STALKMARKET_MATCH(priceM: (number | "N/A")[][], firstBuy: boolean, probabilityM?: number[][]) {
+    let knownPrices = Array(14).fill(0);
     for (let i = 1; i < 14; i++) {
-        if (typeof priceV[i] !== "number") {
-            priceV[i] = 0;
+        if (typeof priceM[0][i - 1] === "number") {
+            knownPrices[i] = priceM[0][i - 1] || 0;
         }
-        knownPrices[i] = priceV[i - 1] || 0;
+        else {
+            knownPrices[i] = 0;
+        }
     }
+    knownPrices[0] = knownPrices[1];
+    let unknownBuyPrice = knownPrices[0] === 0;
 
     if (firstBuy) {
         knownPrices[0] = 0;
         knownPrices[1] = 0;
     }
 
-    let previousPattern = (probabilityV || []).indexOf(1);
+    let previousPattern = (probabilityM || [[]])[0].indexOf(1);
 
     let response = UrlFetchApp.fetch(STALK_MARKET_API, {
         'method': 'post',
