@@ -7,8 +7,8 @@ let values: { [key: string]: string } = config.split("\n").reduce((pV, cV) => {
     return pV;
 }, {});
 
-let javascript = fs.readFileSync("index.js").toString();
+let javascript = fs.readFileSync("./out/index.js").toString();
 for (let key in values) {
     javascript = javascript.split(`\#${key}\#`).join(values[key]);
 }
-fs.writeFileSync("index.js", javascript);
+fs.writeFileSync("./out/index.js", javascript);

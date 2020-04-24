@@ -1,6 +1,22 @@
 import * as StalkMarket from "stalk-market";
 
+export type StalkMarketApiResponse = { result?: StalkMarket.PriceAnalysis; requestId: string; };
+export type StalkMarketApi = (knownPrices: number[], previousPattern: number | undefined) => StalkMarketApiResponse;
+
 const STALK_MARKET_API = "#STALK_MARKET_API#";
+
+function urlFetchStalkMarket(knownPrices: number[], previousPattern: number | undefined): StalkMarketApiResponse {
+    let response = UrlFetchApp.fetch(STALK_MARKET_API, {
+        'method': 'post',
+        'contentType': 'application/json',
+        'payload': JSON.stringify({
+            knownPrices: knownPrices,
+            previousPattern: previousPattern === -1 ? undefined : previousPattern
+        })
+    });
+    let responseObj: { result?: StalkMarket.PriceAnalysis, requestId: string } = JSON.parse(response.getContentText());
+    return responseObj;
+}
 
 /**
  * @param priceM A 1 row, 13 column, matrix of numbers. Each element is a turnip price. The
@@ -10,7 +26,7 @@ const STALK_MARKET_API = "#STALK_MARKET_API#";
  * @param probabilityM A 1 row, 4 column matrix of numbers. Each element is a 0..1 probability
  * that pattern i (i being the column) was the pattern last week.
  */
-function STALKMARKET_MATCH(priceM: (number | "N/A")[][], firstBuy: boolean, probabilityM?: number[][]) {
+function STALKMARKET_MATCH(priceM: (number | "N/A")[][], firstBuy: boolean, probabilityM: number[][] = [[]], api: StalkMarketApi = urlFetchStalkMarket) {
     let knownPrices = Array(14).fill(0);
     for (let i = 1; i < 14; i++) {
         if (typeof priceM[0][i - 1] === "number") {
@@ -28,68 +44,66 @@ function STALKMARKET_MATCH(priceM: (number | "N/A")[][], firstBuy: boolean, prob
         knownPrices[1] = 0;
     }
 
-    let previousPattern = (probabilityM || [[]])[0].indexOf(1);
+    let previousPattern = probabilityM[0].indexOf(1);
 
-    let response = UrlFetchApp.fetch(STALK_MARKET_API, {
-        'method': 'post',
-        'contentType': 'application/json',
-        'payload': JSON.stringify({
-            knownPrices: knownPrices,
-            previousPattern: previousPattern === -1 ? undefined : previousPattern
-        })
-    });
-    let responseObj: { result: StalkMarket.PriceAnalysis, requestId: string } = JSON.parse(response.getContentText());
+    let apiResponse = api(knownPrices, previousPattern);
+    let analysis = apiResponse.result;
+    let requestId = apiResponse.result;
     let returnMatrix: (number | string)[][] = [Array(19).fill(" ")];
 
-    let analysis = responseObj.result;
-    let patternToUse = analysis[0];
-    let matchToUse = patternToUse.matches[0];
+    if (!!analysis) {
+        let patternToUse = analysis[0];
+        let matchToUse = patternToUse.matches[0];
 
-    if (!!matchToUse) {
-        matchToUse.shift();
+        if (!!matchToUse) {
+            matchToUse.shift();
 
-        if (firstBuy) {
-            returnMatrix[0][0] = "first buy";
-        } else if (unknownBuyPrice) {
-            returnMatrix[0][0] = matchToUse[0][0] + "," + matchToUse[0][1]
+            if (firstBuy) {
+                returnMatrix[0][0] = "first buy";
+            } else if (unknownBuyPrice) {
+                returnMatrix[0][0] = matchToUse[0][0] + "," + matchToUse[0][1]
+            } else {
+                returnMatrix[0][0] = matchToUse[0][0]
+            }
+
+            for (let i = 1; i < 13; i++) {
+                returnMatrix[0][i] = matchToUse[i][0] !== matchToUse[i][1] ? matchToUse[i][0] + "," + matchToUse[i][1] : matchToUse[i][0];
+            }
         } else {
-            returnMatrix[0][0] = matchToUse[0][0]
+            returnMatrix[0][0] = "No match?";
         }
 
-        for (let i = 1; i < 13; i++) {
-            returnMatrix[0][i] = matchToUse[i][0] !== matchToUse[i][1] ? matchToUse[i][0] + "," + matchToUse[i][1] : matchToUse[i][0];
+        let patternWithBestChance = analysis.reduce((pV, cV) => {
+            if (pV.patternIdx === -1) {
+                return cV;
+            } else if (pV.probability < cV.probability) {
+                return cV;
+            } else {
+                return pV;
+            }
+        }, analysis[0]);
+        if (!matchToUse) {
+            returnMatrix[0][13] = "Unknown";
+        } else {
+            returnMatrix[0][13] = patternWithBestChance.patternName;
         }
+
+        let pattern0Analysis = analysis.filter((m) => m.patternIdx == 0)[0];
+        let pattern1Analysis = analysis.filter((m) => m.patternIdx == 1)[0];
+        let pattern2Analysis = analysis.filter((m) => m.patternIdx == 2)[0];
+        let pattern3Analysis = analysis.filter((m) => m.patternIdx == 3)[0];
+
+        returnMatrix[0][14] = pattern0Analysis.probability / 100;
+        returnMatrix[0][15] = pattern1Analysis.probability / 100;
+        returnMatrix[0][16] = pattern2Analysis.probability / 100;
+        returnMatrix[0][17] = pattern3Analysis.probability / 100;
     } else {
-        returnMatrix[0][0] = "No match?";
+        returnMatrix[0][0] = "Error";
     }
 
-    let patternWithBestChance = analysis.reduce((pV, cV) => {
-        if (pV.patternIdx === -1) {
-            return cV;
-        } else if (pV.probability < cV.probability) {
-            return cV;
-        } else {
-            return pV;
-        }
-    }, analysis[0]);
-    if (!matchToUse) {
-        returnMatrix[0][13] = "Unknown";
-    } else {
-        returnMatrix[0][13] = patternWithBestChance.patternName;
-    }
 
-    let pattern0Analysis = analysis.filter((m) => m.patternIdx == 0)[0];
-    let pattern1Analysis = analysis.filter((m) => m.patternIdx == 1)[0];
-    let pattern2Analysis = analysis.filter((m) => m.patternIdx == 2)[0];
-    let pattern3Analysis = analysis.filter((m) => m.patternIdx == 3)[0];
-
-    returnMatrix[0][14] = pattern0Analysis.probability / 100;
-    returnMatrix[0][15] = pattern1Analysis.probability / 100;
-    returnMatrix[0][16] = pattern2Analysis.probability / 100;
-    returnMatrix[0][17] = pattern3Analysis.probability / 100;
-
-    returnMatrix[0][18] = JSON.stringify(responseObj.requestId);
+    returnMatrix[0][18] = JSON.stringify(requestId);
     return returnMatrix;
 }
 
-export default STALKMARKET_MATCH;
+export let STALK_MARKET_MATCH = STALKMARKET_MATCH;
