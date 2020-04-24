@@ -3,7 +3,7 @@ import * as StalkMarket from "stalk-market";
 export type StalkMarketApiResponse = { result?: StalkMarket.PriceAnalysis; requestId: string; };
 export type StalkMarketApi = (knownPrices: number[], previousPattern: number | undefined) => StalkMarketApiResponse;
 
-const STALK_MARKET_API = "#STALK_MARKET_API#";
+const STALK_MARKET_API = "$STALK_MARKET_API";
 
 function urlFetchStalkMarket(knownPrices: number[], previousPattern: number | undefined): StalkMarketApiResponse {
     let response = UrlFetchApp.fetch(STALK_MARKET_API, {
@@ -48,7 +48,7 @@ function STALKMARKET_MATCH(priceM: (number | "N/A")[][], firstBuy: boolean, prob
 
     let apiResponse = api(knownPrices, previousPattern);
     let analysis = apiResponse.result;
-    let requestId = apiResponse.result;
+    let requestId = apiResponse.requestId;
     let returnMatrix: (number | string)[][] = [Array(19).fill(" ")];
 
     if (!!analysis) {
