@@ -11,7 +11,7 @@ function urlFetchStalkMarket(knownPrices: number[], previousPattern: number | un
         'contentType': 'application/json',
         'payload': JSON.stringify({
             knownPrices: knownPrices,
-            previousPattern: previousPattern === -1 ? undefined : previousPattern
+            previousPattern: previousPattern
         })
     });
     let responseObj: { result?: StalkMarket.PriceAnalysis, requestId: string } = JSON.parse(response.getContentText());
@@ -26,7 +26,7 @@ function urlFetchStalkMarket(knownPrices: number[], previousPattern: number | un
  * @param probabilityM A 1 row, 4 column matrix of numbers. Each element is a 0..1 probability
  * that pattern i (i being the column) was the pattern last week.
  */
-function STALKMARKET_MATCH(priceM: (number | "N/A")[][], firstBuy: boolean, probabilityM: number[][] = [[]], api: StalkMarketApi = urlFetchStalkMarket) {
+function STALK_MARKET_MATCH(priceM: (number | string)[][], firstBuy: boolean, probabilityM: number[][] = [[]], api: StalkMarketApi = urlFetchStalkMarket) {
     let knownPrices = Array(14).fill(0);
     for (let i = 1; i < 14; i++) {
         if (typeof priceM[0][i - 1] === "number") {
@@ -46,7 +46,7 @@ function STALKMARKET_MATCH(priceM: (number | "N/A")[][], firstBuy: boolean, prob
 
     let previousPattern = probabilityM[0].indexOf(1);
 
-    let apiResponse = api(knownPrices, previousPattern);
+    let apiResponse = api(knownPrices, previousPattern === -1 ? undefined : previousPattern);
     let analysis = apiResponse.result;
     let requestId = apiResponse.requestId;
     let returnMatrix: (number | string)[][] = [Array(19).fill(" ")];
@@ -106,4 +106,4 @@ function STALKMARKET_MATCH(priceM: (number | "N/A")[][], firstBuy: boolean, prob
     return returnMatrix;
 }
 
-export let STALK_MARKET_MATCH = STALKMARKET_MATCH;
+export let stalkMarketMatch = STALK_MARKET_MATCH;

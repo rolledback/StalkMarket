@@ -5,11 +5,14 @@
   "main": "./index.js",
   "dependencies": {},
   "scripts": {
-    "build": "tsc --build --clean && tsc --build && node ./out/gs.js"
+    "build": "tsc --build --clean && tsc --build && node ./out/gs.js",
+    "test": "mocha ./out/test.js"
   },
   "devDependencies": {
     "@types/google-apps-script": "^1.0.12",
+    "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.2",
+    "mocha": "^7.1.1",
     "stalk-market": "^2.1.0",
     "typescript": "^3.8.3"
   },
