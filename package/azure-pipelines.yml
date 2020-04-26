@@ -1,0 +1,23 @@
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    cd package/
+    npm install
+    npm run build
+  displayName: 'npm install and build'
+
+- script: |
+    cd package/
+    npm run test-cicd
+  displayName: 'npm test'
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: 'test-results.xml'
+    searchFolder: '$(System.DefaultWorkingDirectory)/package'

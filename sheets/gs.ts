@@ -1,6 +1,11 @@
 import * as fs from "fs";
 
-let config = fs.readFileSync(".gs-config").toString();
+let config;
+try {
+    config = fs.readFileSync(".gs-config").toString();
+} catch {
+    config = "";
+}
 
 let secrets: { [key: string]: string } = {};
 let deletes: string[] = [];
