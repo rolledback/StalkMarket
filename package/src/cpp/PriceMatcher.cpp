@@ -67,32 +67,43 @@ namespace PriceMatcher
             isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], 0.9, 1.4, pricesToMatch[work]);
             work++;
 
-            isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], 1.4, 2.0, pricesToMatch[work]);
+            float rateMin2 = 1.4;
+            float rateMax2 = 2.0;
+
+            isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], 1.4, rateMax2, pricesToMatch[work]);
+            maxAndMins[work][0] - 1;
+            maxAndMins[work][1] - 1;
+            if (pricesToMatch[work] != 0)
+            {
+                rateMin2 = (float)pricesToMatch[work] / (float)basePrice;
+            }
             work++;
 
-            isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], 1.4, 2.0, pricesToMatch[work]);
+            isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], rateMin2, rateMax2, pricesToMatch[work]);
             work++;
 
-            isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], 1.4, 2.0, pricesToMatch[work]);
+            isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], 1.4, rateMax2, pricesToMatch[work]);
+            maxAndMins[work][0] - 1;
+            maxAndMins[work][1] - 1;
             work++;
 
             if (work < 14)
             {
-                float rateMin2 = 0.4;
-                float rateMax2 = 0.9;
+                float rateMin3 = 0.4;
+                float rateMax3 = 0.9;
                 for (; work < 14; work++)
                 {
-                    isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], rateMin2, rateMax2, pricesToMatch[work]);
+                    isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], rateMin3, rateMax3, pricesToMatch[work]);
 
                     if (pricesToMatch[work] != 0)
                     {
-                        rateMin2 = (float)pricesToMatch[work] / (float)basePrice;
-                        rateMax2 = (float)pricesToMatch[work] / (float)basePrice;
+                        rateMin3 = (float)pricesToMatch[work] / (float)basePrice;
+                        rateMax3 = (float)pricesToMatch[work] / (float)basePrice;
                     }
-                    rateMin2 -= 0.03;
-                    rateMax2 -= 0.03;
+                    rateMin3 -= 0.03;
+                    rateMax3 -= 0.03;
 
-                    rateMin2 -= 0.02;
+                    rateMin3 -= 0.02;
                 }
             }
 
