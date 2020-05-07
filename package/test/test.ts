@@ -19,22 +19,17 @@ describe("getPatternProbabilities", function () {
         let result = StalkMarket.getPatternProbabilities(undefined, [false, false, false, false]);
         assert(!!result);
     });
-    it("should always add to ~100", function () {
+    it("should always add to ~100 or 0", function () {
         let result: number[];
 
-        for (let pattern = 0; pattern < 5; pattern++) {
-            for (let i = 0; i < (1 << 3); i++) {
-                let impossiblePatterns: boolean[] = [];
-                for (let j = 4 - 1; j >= 0; j--) {
-                    impossiblePatterns.push(Boolean(i & (1 << j)));
-                }
-
-                result = StalkMarket.getPatternProbabilities(pattern < 4 ? pattern : undefined, impossiblePatterns);
+        let combinations = generateBooleanCombinations(4);
+        for (let prevPattern = 0; prevPattern < 5; prevPattern++) {
+            combinations.forEach((combination) => {
+                result = StalkMarket.getPatternProbabilities(prevPattern < 4 ? prevPattern : undefined, combination)
                 assert(!!result);
-
                 let sum = result.reduce((pV, cV) => pV + cV, 0);
-                assert(100 - sum < 1);
-            }
+                assert(100 - sum < 1 || sum === 0);
+            });
         }
     });
 });
@@ -64,3 +59,18 @@ describe("analyzePrices", function () {
         assert(resultsAreTheSame);
     });
 });
+
+function generateBooleanCombinations(length: number): boolean[][] {
+    let returnVal: boolean[][] = [];
+    const AMOUNT_OF_VARIABLES = length;
+
+    for (let i = 0; i < (1 << AMOUNT_OF_VARIABLES); i++) {
+        let boolArr: boolean[] = [];
+        for (let j = AMOUNT_OF_VARIABLES - 1; j >= 0; j--) {
+            boolArr.push(Boolean(i & (1 << j)));
+        }
+        returnVal.push(boolArr);
+    }
+
+    return returnVal;
+}

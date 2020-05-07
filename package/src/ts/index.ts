@@ -93,28 +93,29 @@ function addPatternsAnalysis(analysis: PriceAnalysis): void {
 }
 
 export function getPatternProbabilities(previousPattern: number | undefined, impossiblePatterns: boolean[]): number[] {
-    if (impossiblePatterns.filter((i) => i).length === 4) {
+    if (impossiblePatterns.every((i) => i)) {
         return Array(4).fill(0);
     }
 
     let probabilities: number[];
-    if (!!previousPattern) {
+    if (previousPattern !== undefined) {
         probabilities = probabilityTable[previousPattern].slice(0);
     } else {
         probabilities = probabilityTable[4].slice(0);
     }
 
-    let possiblePatternCount = impossiblePatterns.filter((impossible) => !impossible).length;
+    let total = 0;
 
     for (let i = 0; i < 4; i++) {
         if (impossiblePatterns[i]) {
-            for (let j = 0; j < 4; j++) {
-                if (!impossiblePatterns[j]) {
-                    probabilities[j] += probabilities[i] / possiblePatternCount;
-                }
-            }
             probabilities[i] = 0;
+        } else {
+            total += probabilities[i];
         }
+    }
+
+    for (let i = 0; i < 4; i++) {
+        probabilities[i] = probabilities[i] / total * 100;
     }
 
     return probabilities;
