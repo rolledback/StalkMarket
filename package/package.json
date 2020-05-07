@@ -1,6 +1,6 @@
 {
   "name": "stalk-market",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Provides tools to analyze past and present turnip prices from Animal Crossing New Horizons.",
   "main": "./src/js/index.js",
   "dependencies": {
