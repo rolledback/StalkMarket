@@ -27,6 +27,11 @@ function urlFetchStalkMarket(knownPrices: number[], previousPattern: number | un
  * that pattern i (i being the column) was the pattern last week.
  */
 function STALK_MARKET_MATCH(priceM: (number | string)[][], firstBuy: boolean, probabilityM: number[][] = [[]], api: StalkMarketApi = urlFetchStalkMarket) {
+    let noData = priceM[0].every((p) => !p);
+    if (noData) {
+        return [Array(19).fill(" ")];
+    }
+
     let knownPrices = Array(14).fill(0);
     for (let i = 1; i < 14; i++) {
         if (typeof priceM[0][i - 1] === "number") {
