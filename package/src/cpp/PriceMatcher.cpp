@@ -80,6 +80,10 @@ namespace PriceMatcher
             work++;
 
             isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], rateMin2, rateMax2, pricesToMatch[work]);
+            if (pricesToMatch[work] != 0) {
+                rateMin2 = (float)pricesToMatch[work] / (float)basePrice;
+                rateMax2 = (float)pricesToMatch[work] / (float)basePrice;
+            }
             work++;
 
             isInvalid = isInvalid || rndFltMultAndCheckPrice(maxAndMins[work], 1.4, rateMax2, pricesToMatch[work]);
