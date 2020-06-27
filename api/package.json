@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@types/request": "^2.48.4",
-    "stalk-market": "^2.2.0"
+    "stalk-market": "^2.3.0"
   },
   "devDependencies": {
     "@azure/functions": "^1.0.2-beta2",
