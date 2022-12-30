@@ -13,7 +13,7 @@
     "@types/google-apps-script": "^1.0.12",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.2",
-    "mocha": "^7.1.1",
+    "mocha": "^10.2.0",
     "mocha-junit-reporter": "^1.23.3",
     "stalk-market": "^2.1.0",
     "typescript": "^3.8.3"
